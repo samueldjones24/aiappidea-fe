@@ -1,38 +1,11 @@
 import { useState, useEffect } from "react";
-import styled from '@emotion/styled'
 import axios from "axios";
 import Card from './Card'
-import { Skeleton, Typography } from '@mui/material'
+import { Skeleton, Typography, Input, InputLabel, Fab, TextField  } from '@mui/material'
+import { Wrapper, Header, Main, Footer, FooterText, ActionsWrapper } from "./App.styles";
+import { Lightbulb } from "@mui/icons-material";
 
-const Wrapper = styled.div`
-  background: #12c2e9;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #f64f59, #c471ed, #12c2e9);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
-
-const Header = styled.div`
-  flex: 1;
-  padding: 32px;
-`
-
-const Main = styled.div`
-  flex: 4;
-`
-
-const Footer = styled.div`
-  flex: 0;
-`
-
-const FooterText = styled.p`
-  color: whitesmoke;
-  font-size: 0.8rem;
-`
+const DEFAULT_THEME = 'environmental'
 
 type ChatResponse = {
   title: string; 
@@ -42,27 +15,37 @@ type ChatResponse = {
 }
 
 export function App() {
-  const [appTheme, setAppTheme] = useState("environmental");
+  const [appTheme, setAppTheme] = useState(DEFAULT_THEME);
   const [response, setResponse] = useState<ChatResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const fetchIdeas = () => {
     setIsLoading(true)
+    setErrorMessage('')
     
-    const prompt = `Give me a new app idea in the following JSON format: title, tagline, description, keywords. 
-    The focus of the app should be ${appTheme}.`
+    const prompt = `Give me a new app idea in the following JSON format: 
+    title, tagline (without referring to the title), description (maximum 400 characters), keywords (maximum 5). 
+    The app theme should be ${appTheme}.`
+
+    const controller = new AbortController()
 
     axios
-      .post(`${process.env.REACT_APP_API_BASE_URL}/chat`, { prompt })
+      .post(`${process.env.REACT_APP_API_BASE_URL}/chat`, { prompt }, { signal: controller.signal, timeout: 10000 })
       .then((res) => {
         setResponse(res.data);
         setIsLoading(false)
       })
       .catch((err) => {
-        console.error(err);
+        setErrorMessage(err?.response?.data?.message || 'Oops! Something went wrong')
+        setResponse(null);
         setIsLoading(false)
       });
   };
+
+  const handleThemeChange = () => {
+
+  }
 
   useEffect(() => {
     fetchIdeas()
@@ -71,26 +54,45 @@ export function App() {
   return (
     <Wrapper>
       <Header>
-        <Typography variant="h1" color="whitesmoke">App Idea Generator</Typography>
+        <Typography gutterBottom variant="h1" color="whitesmoke">AI App Ideas</Typography>
+        <Typography variant="h5" color="whitesmoke">Find your next app idea with the help of AI</Typography>
       </Header>
 
       <Main>
-      {isLoading && <>
-        <Skeleton variant="circular" width={40} height={40} />
-        <Skeleton variant="rectangular" width={210} height={60} />
-        <Skeleton variant="rounded" width={210} height={60} />
-      </>
+      {!isLoading && errorMessage &&
+        <Typography color='whitesmoke' variant='h6'>{errorMessage}</Typography>
+      }
+      {isLoading &&
+        <>
+          <Skeleton variant="rectangular" width={350} height={300} />
+          <Skeleton variant="rounded" width={350} height={50} />
+          <Skeleton variant="rounded" width={350} height={50} />
+        </>
       } 
 
       {!isLoading && 
-        response && 
+        response &&
           <Card 
             title={response.title} 
             tagline={response.tagline}
             description={response.description} 
-            image={`https://source.unsplash.com/random/?${response.keywords[0]}&1`} 
-            keywords={response.keywords}/>
+            image={`https://source.unsplash.com/random/?${response.keywords?.[0] || response.title}`} 
+            keywords={response.keywords} 
+          />
       }
+      <ActionsWrapper>
+      <TextField id="change-app-theme" label="Change theme" 
+        variant="standard" 
+        color='primary' 
+        disabled={isLoading} 
+        value={appTheme === DEFAULT_THEME ? '' : appTheme}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAppTheme(e.target.value === '' ? DEFAULT_THEME : e.target.value)}
+        />
+      <Fab color="primary" variant="extended" sx={{ borderRadius: 1 }} onClick={fetchIdeas} disabled={isLoading}>
+            <Lightbulb sx={{ mr: 1 }} />
+            Show me a new idea
+      </Fab>
+      </ActionsWrapper>
       </Main>
       <Footer>
         <FooterText>Powered by ChatGPT</FooterText>
