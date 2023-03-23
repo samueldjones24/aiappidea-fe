@@ -3,7 +3,7 @@ import axios from "axios";
 import Card from './Card'
 import { Skeleton, Typography, Input, InputLabel, Fab, TextField  } from '@mui/material'
 import { Wrapper, Header, Main, Footer, FooterText, ActionsWrapper } from "./App.styles";
-import { Lightbulb } from "@mui/icons-material";
+import { AcUnit, Lightbulb } from "@mui/icons-material";
 
 const DEFAULT_THEME = 'environmental'
 
@@ -43,13 +43,19 @@ export function App() {
       });
   };
 
-  const handleThemeChange = () => {
-
+  const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === '') {
+      setAppTheme(DEFAULT_THEME)
+    } else {
+      setAppTheme(e.target.value)
+    }
   }
 
   useEffect(() => {
     fetchIdeas()
   }, [])
+
+  const formattedKeywords = response?.keywords?.map(keyword => keyword.replace(/ /g, ''))
 
   return (
     <Wrapper>
@@ -60,7 +66,10 @@ export function App() {
 
       <Main>
       {!isLoading && errorMessage &&
+      <>
+        <AcUnit color="warning" />
         <Typography color='whitesmoke' variant='h6'>{errorMessage}</Typography>
+        </>
       }
       {isLoading &&
         <>
@@ -76,8 +85,8 @@ export function App() {
             title={response.title} 
             tagline={response.tagline}
             description={response.description} 
-            image={`https://source.unsplash.com/random/?${response.keywords?.[0] || response.title}`} 
-            keywords={response.keywords} 
+            image={`https://source.unsplash.com/random/?${formattedKeywords?.[0] || response.title}`} 
+            keywords={formattedKeywords || []} 
           />
       }
       <ActionsWrapper>
@@ -86,7 +95,7 @@ export function App() {
         color='primary' 
         disabled={isLoading} 
         value={appTheme === DEFAULT_THEME ? '' : appTheme}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAppTheme(e.target.value === '' ? DEFAULT_THEME : e.target.value)}
+        onChange={handleThemeChange}
         />
       <Fab color="primary" variant="extended" sx={{ borderRadius: 1 }} onClick={fetchIdeas} disabled={isLoading}>
             <Lightbulb sx={{ mr: 1 }} />
