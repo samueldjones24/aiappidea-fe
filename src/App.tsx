@@ -66,8 +66,8 @@ export function App(): JSX.Element {
     fetchIdeas()
   }, [])
 
-  const formattedKeywords = response?.keywords?.map((keyword) =>
-    keyword.replace(/ /g, '')
+  const formattedKeywords = response?.keywords?.map(
+    (keyword) => `#${keyword.replace(/ /g, '')}`
   )
 
   return (
@@ -84,7 +84,7 @@ export function App(): JSX.Element {
       <Main>
         {!isLoading && errorMessage.length > 0 && (
           <>
-            <AcUnit color="warning" />
+            <AcUnit color="info" sx={{ height: 150, width: 150 }} />
             <Typography color="whitesmoke" variant="h6">
               {errorMessage}
             </Typography>
@@ -104,7 +104,7 @@ export function App(): JSX.Element {
             tagline={response.tagline}
             description={response.description}
             image={`https://source.unsplash.com/random/?${
-              formattedKeywords != null ? formattedKeywords[0] : response.title
+              response.keywords != null ? response.keywords[0] : response.title
             }`}
             keywords={formattedKeywords != null ? formattedKeywords : []}
           />

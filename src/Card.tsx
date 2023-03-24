@@ -1,23 +1,22 @@
 import {
   Card,
-  Button,
   CardActions,
   Fade,
   CardContent,
   Typography,
   CardMedia,
 } from '@mui/material'
-import { Share } from '@mui/icons-material'
-import styled from '@emotion/styled'
+import { KeywordWrapper } from './Card.styles'
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  FacebookIcon,
+  LinkedinIcon,
+  TwitterIcon,
+} from 'react-share'
 
-const KeywordWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-  gap: 4px;
-  margin-top: 16px;
-`
+// TODO: fix social URLs
 
 interface CardProps {
   title: string
@@ -56,15 +55,36 @@ export default function IdeaCard({
                 color="text.secondary"
                 fontWeight={500}
               >
-                #{keyword}
+                {keyword}
               </Typography>
             ))}
           </KeywordWrapper>
         </CardContent>
-        <CardActions>
-          <Button size="small" color="primary" startIcon={<Share />}>
-            Share idea
-          </Button>
+        <CardActions
+          sx={{ display: 'flex', justifyContent: 'flex-end', mr: 1 }}
+        >
+          <FacebookShareButton
+            url="https://www.google.com"
+            quote={title}
+            hashtag={keywords[0]}
+          >
+            <FacebookIcon size={24} borderRadius={8} />
+          </FacebookShareButton>
+          <TwitterShareButton
+            url="https://www.google.com"
+            title={title}
+            hashtags={keywords}
+          >
+            <TwitterIcon size={24} borderRadius={8} />
+          </TwitterShareButton>
+          <LinkedinShareButton
+            url="https://www.google.com"
+            title={title}
+            summary={tagline}
+            source="AI App Ideas"
+          >
+            <LinkedinIcon size={24} borderRadius={8} />
+          </LinkedinShareButton>
         </CardActions>
       </Card>
     </Fade>
