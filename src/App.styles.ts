@@ -56,3 +56,11 @@ export const ActionsWrapper = styled.div`
     flex-direction: row;
   }
 `
+
+export const FooterLink = styled.a`
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+  }
+`

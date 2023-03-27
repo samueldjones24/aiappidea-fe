@@ -8,6 +8,7 @@ import {
   Main,
   Footer,
   FooterText,
+  FooterLink,
   ActionsWrapper,
 } from './App.styles'
 import { AcUnit, Lightbulb } from '@mui/icons-material'
@@ -74,10 +75,10 @@ export function App(): JSX.Element {
     <Wrapper>
       <Header>
         <Typography gutterBottom variant="h1" color="whitesmoke">
-          AI App Ideas
+          AI App Idea
         </Typography>
         <Typography variant="h5" color="whitesmoke">
-          Find your next app idea with the help of AI
+          Find your next big app idea with the help of AI
         </Typography>
       </Header>
 
@@ -131,7 +132,17 @@ export function App(): JSX.Element {
         </ActionsWrapper>
       </Main>
       <Footer>
-        <FooterText>Powered by ChatGPT</FooterText>
+        <FooterText>
+          Made with ☕ by{' '}
+          <FooterLink
+            href="https://twitter.com/aiappidea"
+            rel="noreferrer nopener"
+            target="_blank"
+          >
+            @aiappidea
+          </FooterLink>{' '}
+          | Powered by ChatGPT
+        </FooterText>
       </Footer>
     </Wrapper>
   )

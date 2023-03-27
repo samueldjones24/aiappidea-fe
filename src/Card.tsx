@@ -16,7 +16,7 @@ import {
   TwitterIcon,
 } from 'react-share'
 
-// TODO: fix social URLs
+// TODO: check social content
 
 interface CardProps {
   title: string
@@ -64,24 +64,23 @@ export default function IdeaCard({
           sx={{ display: 'flex', justifyContent: 'flex-end', mr: 1 }}
         >
           <FacebookShareButton
-            url="https://www.google.com"
-            quote={title}
+            url="https://www.aiappidea.com"
+            quote={`Check out this new app idea: ${title} - ${tagline}`}
             hashtag={keywords[0]}
           >
             <FacebookIcon size={24} borderRadius={8} />
           </FacebookShareButton>
           <TwitterShareButton
-            url="https://www.google.com"
-            title={title}
+            url="https://www.aiappidea.com"
+            title={`Check out this new app idea: ${title} - ${tagline}`}
             hashtags={keywords}
           >
             <TwitterIcon size={24} borderRadius={8} />
           </TwitterShareButton>
           <LinkedinShareButton
-            url="https://www.google.com"
-            title={title}
-            summary={tagline}
-            source="AI App Ideas"
+            url="https://www.aiappidea.com"
+            title={`Check out this new app idea: ${title} - ${tagline}`}
+            source="AI App Idea"
           >
             <LinkedinIcon size={24} borderRadius={8} />
           </LinkedinShareButton>
