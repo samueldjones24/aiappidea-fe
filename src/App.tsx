@@ -114,7 +114,6 @@ export function App(): JSX.Element {
             id="change-app-theme"
             label="Change theme"
             variant="standard"
-            color="primary"
             disabled={isLoading}
             value={appTheme === DEFAULT_THEME ? '' : appTheme}
             onChange={handleThemeChange}
