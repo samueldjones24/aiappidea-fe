@@ -40,7 +40,7 @@ export function App(): JSX.Element {
 
     axios
       .post(
-        `${process.env.REACT_APP_API_BASE_URL as string}/chat`,
+        `${process.env.REACT_APP_API_BASE_URL as string}/idea`,
         { prompt },
         { signal: controller.signal, timeout: 10000 }
       )
