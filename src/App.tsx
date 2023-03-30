@@ -22,6 +22,8 @@ interface ChatResponse {
   keywords: string[]
 }
 
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL as string
+
 export function App(): JSX.Element {
   const [appTheme, setAppTheme] = useState(DEFAULT_THEME)
   const [response, setResponse] = useState<ChatResponse | null>(null)
@@ -40,7 +42,7 @@ export function App(): JSX.Element {
 
     axios
       .post(
-        `${process.env.REACT_APP_API_BASE_URL as string}/idea`,
+        `${apiBaseUrl}/idea`,
         { prompt },
         { signal: controller.signal, timeout: 10000 }
       )
