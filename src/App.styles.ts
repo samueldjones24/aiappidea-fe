@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { ReactComponent as Error } from './error.svg'
 
 export const Wrapper = styled.div`
   background: #12c2e9; /* fallback for old browsers */
@@ -50,9 +51,10 @@ export const ActionsWrapper = styled.div`
   flex-direction: column;
   gap: 32px;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 2rem;
 
   @media (min-width: 600px) {
+    justify-content: center;
     flex-direction: row;
   }
 `
@@ -63,4 +65,15 @@ export const FooterLink = styled.a`
   &:hover {
     text-decoration: none;
   }
+`
+export const ErrorWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
+export const ErrorSVG = styled(Error)`
+  height: 340px;
+  width: 340px;
 `

@@ -10,11 +10,10 @@ import {
   FooterText,
   FooterLink,
   ActionsWrapper,
+  ErrorWrapper,
+  ErrorSVG,
 } from './App.styles'
-import { AcUnit, Lightbulb } from '@mui/icons-material'
-
-const DEFAULT_THEME = 'environmental'
-
+import { Lightbulb } from '@mui/icons-material'
 interface ChatResponse {
   title: string
   tagline: string
@@ -25,18 +24,22 @@ interface ChatResponse {
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL as string
 
 export function App(): JSX.Element {
-  const [appTheme, setAppTheme] = useState(DEFAULT_THEME)
+  const [appTheme, setAppTheme] = useState('')
   const [response, setResponse] = useState<ChatResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [hasError, setHasError] = useState(false)
+
+  const appThemeRequest =
+    appTheme !== '' ? `The app theme should be ${appTheme}.` : ''
 
   const fetchIdeas = (): void => {
     setIsLoading(true)
-    setErrorMessage('')
+    setHasError(false)
 
-    const prompt = `Give me a new app idea in the following JSON format: 
+    const prompt = `Give me a new app idea (that was different to the previous one) in the following JSON format: 
     title, tagline (without referring to the title), description (maximum 400 characters), keywords (maximum 5). 
-    The app theme should be ${appTheme}.`
+    ${appThemeRequest}
+    `
 
     const controller = new AbortController()
 
@@ -47,22 +50,23 @@ export function App(): JSX.Element {
         { signal: controller.signal, timeout: 10000 }
       )
       .then((res) => {
-        setResponse(res.data)
+        if (res.data === '') {
+          setResponse(null)
+        } else {
+          setResponse(res.data)
+        }
+
         setIsLoading(false)
       })
       .catch(() => {
-        setErrorMessage('Oops! Something went wrong')
         setResponse(null)
+        setHasError(true)
         setIsLoading(false)
       })
   }
 
   const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (e.target.value === '') {
-      setAppTheme(DEFAULT_THEME)
-    } else {
-      setAppTheme(e.target.value)
-    }
+    setAppTheme(e.target.value)
   }
 
   useEffect(() => {
@@ -85,13 +89,16 @@ export function App(): JSX.Element {
       </Header>
 
       <Main>
-        {!isLoading && errorMessage.length > 0 && (
-          <>
-            <AcUnit color="info" sx={{ height: 150, width: 150 }} />
+        {!isLoading && (hasError || response === null) && (
+          <ErrorWrapper>
+            <ErrorSVG />
             <Typography color="whitesmoke" variant="h6">
-              {errorMessage}
+              Oops! Something went wrong.
             </Typography>
-          </>
+            <Typography color="whitesmoke" variant="body1">
+              Let us plug the robots back in and then try refreshing the page.
+            </Typography>
+          </ErrorWrapper>
         )}
         {isLoading && (
           <>
@@ -118,7 +125,7 @@ export function App(): JSX.Element {
             label="Change theme"
             variant="standard"
             disabled={isLoading}
-            value={appTheme === DEFAULT_THEME ? '' : appTheme}
+            value={appTheme}
             onChange={handleThemeChange}
           />
           <Fab
