@@ -1,0 +1,1 @@
+export { isJsonObject } from './isJsonObject'

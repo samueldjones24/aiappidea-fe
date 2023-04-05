@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Card from './Card'
 import { Skeleton, Typography, Fab, TextField } from '@mui/material'
+import { type Idea } from './types'
 import {
   Wrapper,
   Header,
@@ -14,18 +15,13 @@ import {
   ErrorSVG,
 } from './App.styles'
 import { Lightbulb } from '@mui/icons-material'
-interface ChatResponse {
-  title: string
-  tagline: string
-  description: string
-  keywords: string[]
-}
+import { isJsonObject } from './utils'
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL as string
 
 export function App(): JSX.Element {
   const [appTheme, setAppTheme] = useState('')
-  const [response, setResponse] = useState<ChatResponse | null>(null)
+  const [idea, setIdea] = useState<Idea | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [hasError, setHasError] = useState(false)
 
@@ -50,16 +46,16 @@ export function App(): JSX.Element {
         { signal: controller.signal, timeout: 10000 }
       )
       .then((res) => {
-        if (res.data === '') {
-          setResponse(null)
+        if (res.data === '' || !isJsonObject(res.data)) {
+          setIdea(null)
         } else {
-          setResponse(res.data)
+          setIdea(res.data)
         }
 
         setIsLoading(false)
       })
       .catch(() => {
-        setResponse(null)
+        setIdea(null)
         setHasError(true)
         setIsLoading(false)
       })
@@ -73,7 +69,7 @@ export function App(): JSX.Element {
     fetchIdeas()
   }, [])
 
-  const formattedKeywords = response?.keywords?.map(
+  const formattedKeywords = idea?.keywords?.map(
     (keyword) => `#${keyword.replace(/ /g, '')}`
   )
 
@@ -89,7 +85,7 @@ export function App(): JSX.Element {
       </Header>
 
       <Main>
-        {!isLoading && (hasError || response === null) && (
+        {!isLoading && (hasError || idea === null) && (
           <ErrorWrapper>
             <ErrorSVG />
             <Typography color="whitesmoke" variant="h6">
@@ -108,13 +104,13 @@ export function App(): JSX.Element {
           </>
         )}
 
-        {!isLoading && response != null && (
+        {!isLoading && idea != null && (
           <Card
-            title={response.title}
-            tagline={response.tagline}
-            description={response.description}
+            title={idea.title}
+            tagline={idea.tagline}
+            description={idea.description}
             image={`https://source.unsplash.com/random/?${
-              response.keywords != null ? response.keywords[0] : response.title
+              idea.keywords != null ? idea.keywords[0] : idea.title
             }`}
             keywords={formattedKeywords != null ? formattedKeywords : []}
           />
