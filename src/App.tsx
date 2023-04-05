@@ -15,7 +15,6 @@ import {
   ErrorSVG,
 } from './App.styles'
 import { Lightbulb } from '@mui/icons-material'
-import { isJsonObject } from './utils'
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL as string
 
@@ -37,16 +36,10 @@ export function App(): JSX.Element {
     ${appThemeRequest}
     `
 
-    const controller = new AbortController()
-
     axios
-      .post(
-        `${apiBaseUrl}/idea`,
-        { prompt },
-        { signal: controller.signal, timeout: 10000 }
-      )
+      .post(`${apiBaseUrl}/idea`, { prompt })
       .then((res) => {
-        if (res.data === '' || !isJsonObject(res.data)) {
+        if (typeof res.data === 'string') {
           setIdea(null)
         } else {
           setIdea(res.data)
