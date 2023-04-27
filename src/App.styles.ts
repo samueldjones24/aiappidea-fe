@@ -27,6 +27,12 @@ export const Wrapper = styled.div`
 export const Header = styled.div`
   flex: 0;
   text-align: center;
+
+  @media only screen and (max-width: 600px) {
+    h1 {
+      font-size: 4rem;
+    }
+  }
 `
 
 export const Main = styled.div`

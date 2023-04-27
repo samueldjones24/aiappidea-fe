@@ -35,7 +35,7 @@ export default function IdeaCard({
 }: CardProps): JSX.Element {
   return (
     <Fade in={Boolean(title)}>
-      <Card sx={{ maxWidth: 400, maxHeight: 600 }}>
+      <Card sx={{ maxWidth: 400, maxHeight: 800 }}>
         <CardMedia component="img" height="160" alt={title} src={image} />
         <CardContent>
           <Typography gutterBottom variant="h5">
