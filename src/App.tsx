@@ -129,11 +129,11 @@ export function App(): JSX.Element {
         <FooterText>
           Made with ☕ by{' '}
           <FooterLink
-            href="https://twitter.com/aiappidea"
+            href="https://www.linkedin.com/in/samueldjones24/"
             rel="noreferrer nopener"
             target="_blank"
           >
-            @aiappidea
+            Samuel Jones
           </FooterLink>{' '}
           | Powered by ChatGPT
         </FooterText>
