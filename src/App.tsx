@@ -11,23 +11,27 @@ import {
   FooterText,
   FooterLink,
   ActionsWrapper,
-  ErrorWrapper,
-  ErrorSVG,
 } from './App.styles'
 import { Lightbulb } from '@mui/icons-material'
+import { useSearchParams } from 'react-router-dom'
+import { ErrorPage } from './ErrorPage'
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL as string
 
 export function App(): JSX.Element {
-  const [appTheme, setAppTheme] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchQuery = searchParams.get('q')
+  const [appTheme, setAppTheme] = useState(() => searchQuery ?? '')
   const [idea, setIdea] = useState<Idea | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [hasError, setHasError] = useState(false)
+  const [isLoading, setIsLoading] = useState(() => false)
+  const [hasError, setHasError] = useState(() => false)
 
   const appThemeRequest =
     appTheme !== '' ? `The app theme should be ${appTheme}.` : ''
 
   const fetchIdeas = (): void => {
+    if (appTheme !== '') setSearchParams({ q: appTheme })
+  
     setIsLoading(true)
     setHasError(false)
 
@@ -79,15 +83,7 @@ export function App(): JSX.Element {
 
       <Main>
         {!isLoading && (hasError || idea === null) && (
-          <ErrorWrapper>
-            <ErrorSVG />
-            <Typography color="whitesmoke" variant="h6">
-              Oops! Something went wrong.
-            </Typography>
-            <Typography color="whitesmoke" variant="body1">
-              Let us plug the robots back in and then try refreshing the page.
-            </Typography>
-          </ErrorWrapper>
+          <ErrorPage />
         )}
         {isLoading && (
           <>
