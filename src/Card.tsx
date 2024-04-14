@@ -64,21 +64,21 @@ export default function IdeaCard({
           sx={{ display: 'flex', justifyContent: 'flex-end', mr: 1 }}
         >
           <FacebookShareButton
-            url="https://www.aiappidea.com"
+            url="https://www.aiappidea.netlify.app"
             quote={`Check out this new app idea: ${title} - ${tagline}`}
             hashtag={keywords[0]}
           >
             <FacebookIcon size={24} borderRadius={8} />
           </FacebookShareButton>
           <TwitterShareButton
-            url="https://www.aiappidea.com"
+            url="https://www.aiappidea.netlify.app"
             title={`Check out this new app idea: ${title} - ${tagline}`}
             hashtags={keywords}
           >
             <TwitterIcon size={24} borderRadius={8} />
           </TwitterShareButton>
           <LinkedinShareButton
-            url="https://www.aiappidea.com"
+            url="https://www.aiappidea.netlify.app"
             title={`Check out this new app idea: ${title} - ${tagline}`}
             source="AI App Idea"
           >
