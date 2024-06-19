@@ -3,4 +3,5 @@ export interface Idea {
   tagline: string
   description: string
   keywords: string[]
+  image: string
 }

@@ -26,22 +26,14 @@ export function App(): JSX.Element {
   const [isLoading, setIsLoading] = useState(() => false)
   const [hasError, setHasError] = useState(() => false)
 
-  const appThemeRequest =
-    appTheme !== '' ? `The app theme should be ${appTheme}.` : ''
-
   const fetchIdeas = (): void => {
     if (appTheme !== '') setSearchParams({ q: appTheme })
   
     setIsLoading(true)
     setHasError(false)
 
-    const prompt = `Give me a new app idea (that was different to the previous one) in the following JSON format: 
-    title, tagline (without referring to the title), description (maximum 400 characters), keywords (maximum 5). 
-    ${appThemeRequest}
-    `
-
     axios
-      .post(`${apiBaseUrl}/idea`, { prompt })
+      .post(`${apiBaseUrl}/idea`, { idea: appTheme })
       .then((res) => {
         if (typeof res.data === 'string') {
           setIdea(null)
@@ -98,9 +90,7 @@ export function App(): JSX.Element {
             title={idea.title}
             tagline={idea.tagline}
             description={idea.description}
-            image={`https://source.unsplash.com/random/?${
-              idea.keywords != null ? idea.keywords[0] : idea.title
-            }`}
+            image={idea.image}
             keywords={formattedKeywords != null ? formattedKeywords : []}
           />
         )}
